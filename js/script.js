@@ -105,7 +105,8 @@ checkboxDarkMode.addEventListener("click", () => {
     document.body.classList.add("dark_theme");
 
     // logo
-    document.querySelector(".logo img").src = "./imgs/logo.png";
+    document.querySelector(".logo img").src =
+      "https://res-console.cloudinary.com/dxbjkpakw/media_explorer_thumbnails/77c495f25748109ba0fcc97a48d18154/detailed";
 
     // clound
     document.querySelector(
@@ -116,7 +117,7 @@ checkboxDarkMode.addEventListener("click", () => {
     // inmg home
     document.querySelector(
       "#home .image"
-    ).innerHTML = ` <img src="./imgs/img1.png" alt="" class="front-img">
+    ).innerHTML = ` <img src="https://res-console.cloudinary.com/dxbjkpakw/media_explorer_thumbnails/a469dc1d4d09e9ad10a08fe89d86ce26/detailed" alt="" class="front-img">
         <img src="https://res.cloudinary.com/dvzingci9/image/upload/v1652845805/My-portfolio/dc1-dark_optimized_etjlg4.png" alt="" class="dc1">
         <img src="https://res.cloudinary.com/dvzingci9/image/upload/v1652845802/My-portfolio/dc2-dark_optimized_bi839d.png" alt="" class="dc2">
         <img src="https://res.cloudinary.com/dvzingci9/image/upload/v1652845802/My-portfolio/dc2-dark_optimized_bi839d.png" alt="" class="dc3">`;
@@ -144,7 +145,8 @@ checkboxDarkMode.addEventListener("click", () => {
     document.body.classList.remove("dark_theme");
 
     // logo
-    document.querySelector(".logo img").src = "./imgs/logoblack.png";
+    document.querySelector(".logo img").src =
+      "https://res-console.cloudinary.com/dxbjkpakw/media_explorer_thumbnails/3357ec6ef3a4d5c2cbf1df36d26257d6/detailed";
 
     // clound
     document.querySelector(
@@ -156,7 +158,7 @@ checkboxDarkMode.addEventListener("click", () => {
     // inmg home
     document.querySelector(
       "#home .image"
-    ).innerHTML = ` <img src="./imgs/img1.png" alt="" class="front-img">
+    ).innerHTML = ` <img src="https://res-console.cloudinary.com/dxbjkpakw/media_explorer_thumbnails/a469dc1d4d09e9ad10a08fe89d86ce26/detailed" alt="" class="front-img">
          <img src="https://res.cloudinary.com/dvzingci9/image/upload/v1652300890/My-portfolio/dc1_stlq7p.png" alt="" class="dc1">
          <img src="https://res.cloudinary.com/dvzingci9/image/upload/v1652300891/My-portfolio/dc2_wquo4x.png" alt="" class="dc2">
          <img src="https://res.cloudinary.com/dvzingci9/image/upload/v1652300891/My-portfolio/dc2_wquo4x.png" alt="" class="dc3">
@@ -167,7 +169,8 @@ checkboxDarkMode.addEventListener("click", () => {
       "https://res.cloudinary.com/dvzingci9/image/upload/v1652300903/My-portfolio/picVAP_m0q8ij.png";
 
     // imgage about me
-    document.querySelector(".about .row-1 .image img").src = "./imgs/img2.JPG";
+    document.querySelector(".about .row-1 .image img").src =
+      "https://res-console.cloudinary.com/dxbjkpakw/media_explorer_thumbnails/a4ec8cea0a3acb0b96167565999f1ad5/detailed";
 
     // about taget
     document.querySelector(".about .row-1 .content img").src =
