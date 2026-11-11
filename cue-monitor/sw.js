@@ -1,4 +1,4 @@
-const CACHE = "sown-cue-monitor-v0.1.3";
+const CACHE = "sown-cue-monitor-v0.2.0";
 const ASSETS = ["./", "./index.html", "./manifest.webmanifest", "./icon.svg"];
 self.addEventListener("install", event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(ASSETS)).then(() => self.skipWaiting()));
