@@ -108,6 +108,82 @@ textarea{min-height:75px;resize:vertical;line-height:1.5}input::placeholder,text
 .quick-note-actions .btn-accent{flex:1;min-height:48px}
 .quick-note-tip{color:#aaa3a7;font-size:11px;line-height:1.5}
 @media(max-width:700px){.quick-note-launch .btn{width:100%;min-height:49px}.quick-note-form{padding:14px}.quick-note-actions .btn{width:100%}.quick-note-actions .btn-quiet{min-height:40px}}
+
+/* v0.3 — iPhone operator compact / fewer secondary notes */
+.app-shell{min-height:100dvh}
+.header{padding:14px 24px;border-bottom:1px solid #252830}
+.showbar{padding:14px 24px}
+.sidebar{padding:18px 14px;gap:12px}
+.main{padding:24px clamp(16px,3vw,36px) 36px}
+.main-layout{gap:16px}
+.page-heading{align-items:center;gap:10px}
+.page-heading h1{font-size:clamp(26px,3vw,34px);margin:4px 0 0;line-height:1.16}
+.section-manage{border:1px solid #30343f;border-radius:10px;background:#151820;padding:8px 12px;flex-shrink:0}
+.section-manage summary{cursor:pointer;list-style:none;color:#c9cbd2;font-size:12px;font-weight:750;min-height:26px;display:flex;gap:8px;align-items:center;justify-content:space-between}
+.section-manage summary::-webkit-details-marker{display:none}
+.section-manage[open]{flex:1 1 100%}
+.section-manage .heading-actions{margin-top:10px;padding-top:10px;border-top:1px solid #30343f;display:flex;gap:7px;flex-wrap:wrap}
+.section-manage .btn{min-height:40px}
+.quick-note-launch{gap:9px}
+.quick-note-launch .btn{min-height:46px;font-weight:800}
+.quick-note-launch .btn:first-child{flex:1;background:#ed444e;border-color:#ed444e}
+.quick-note-launch .btn-outline{flex:1;min-width:0;background:transparent;border:1px solid #4c505b}
+.quick-note-form{padding:15px;gap:12px}
+.quick-note-form input,.quick-note-form textarea{font-size:16px}
+.quick-note-actions .btn{min-height:48px}
+.list-title{gap:8px}
+.list-title h2{font-size:13px}
+.count-badge{font-size:11px}
+.moments{gap:9px}
+.moment-card{border-radius:14px;background:#15171d}
+.moment-inner{padding:15px 16px}
+.moment-heading strong{font-size:17px}
+.moment-trigger{font-size:13px}
+.note-summary{font-size:13px;margin-top:9px;color:#d7dae2}
+.note-summary b{color:#ffffff}
+.chips{margin-top:9px}
+.chip{padding:6px 9px}
+.live-subtitle{font-size:15px;color:#eac4cd}
+.live-hero{border-radius:16px;padding:22px}
+.field-value{font-size:16px}
+.live-actions .btn{min-height:60px}
+.empty-state{padding:28px 16px}
+.footer,.sidebar-foot,.section-hint,.live-notice,.subtitle,.quick-note-tip,.quick-note-hint{display:none !important}
+@media(max-width:950px){.header{padding:14px 16px}.showbar{padding:14px 16px}}
+@media(max-width:700px){
+ .header{padding:14px 15px;padding-top:calc(14px + env(safe-area-inset-top,0px))}
+ .header-actions{gap:6px}
+ .header-actions .btn{min-height:36px}
+ .showbar{padding:13px 15px 15px;gap:9px}
+ .show-name{font-size:22px}
+ .mode-tab{min-height:45px}
+ .sidebar{padding:13px 12px;gap:9px}
+ .main{padding:17px 14px 32px}
+ .main-layout{gap:14px}
+ .page-heading{flex-direction:row;align-items:center;flex-wrap:wrap}
+ .page-heading h1{font-size:28px;margin:2px 0 0}
+ .section-manage{margin-left:auto}
+ .section-manage[open]{width:100%}
+ .section-manage .heading-actions{width:100%;justify-content:flex-start;display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+ .section-manage .btn{width:100%;padding:8px 6px;min-height:42px}
+ .quick-note-launch{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}
+ .quick-note-launch .btn{width:100%;padding:10px 6px;font-size:12px;min-height:49px}
+ .quick-note-form{padding:13px;gap:10px}
+ .quick-note-actions .btn{width:100%}
+ .list-title{display:flex;align-items:center;flex-wrap:wrap}
+ .count-badge{font-size:10px}
+ .moment-inner{padding:13px}
+ .moment-header{gap:8px}
+ .moment-heading strong{font-size:16px}
+ .live-hero{padding:18px}
+ .live-hero h2{font-size:30px}
+ .field-box{padding:12px}
+ .field-grid{gap:8px}
+ .live-actions .btn-accent{font-size:14px}
+ .live-actions .btn-outline{min-width:86px}
+ .upcoming-card{padding:13px}
+}
+
 </style>
 </head>
 <body>
@@ -117,7 +193,7 @@ textarea{min-height:75px;resize:vertical;line-height:1.5}input::placeholder,text
         <div class="brand-mark" aria-hidden="true">S<span>.</span></div>
         <div>
           <div class="brand-top">SOWN<span>LIGHTING</span></div>
-          <div class="brand-bottom">CUE MONITOR <b>V0.2</b></div>
+          <div class="brand-bottom">CUE MONITOR <b>V0.3</b></div>
         </div>
       </div>
       <div class="header-actions">
@@ -146,11 +222,9 @@ textarea{min-height:75px;resize:vertical;line-height:1.5}input::placeholder,text
           <button type="button" class="icon-btn" data-action="add-section" title="Thêm phần" aria-label="Thêm phần">+</button>
         </div>
         <div class="sections" id="sections"></div>
-        <div class="sidebar-foot"><span>Ghi chú rehearsal · Vận hành thủ công</span><span class="pill">OFFLINE</span></div>
       </aside>
       <main class="main" id="main" aria-live="polite"></main>
     </div>
-    <footer class="footer">SOWN CUE MONITOR <span>Không điều khiển grandMA2 · Không cần nhạc hoặc timecode</span></footer>
   </div>
 
   <dialog id="editorDialog" class="editor-dialog" aria-labelledby="dialogTitle">
@@ -260,7 +334,7 @@ textarea{min-height:75px;resize:vertical;line-height:1.5}input::placeholder,text
     const moments=s.moments.map((m,i)=>{
       const chips=[m.executor?`<span class="chip"><b>EXEC</b>${esc(m.executor)}</span>`:'',m.cue?`<span class="chip"><b>CUE</b>${esc(m.cue)}</span>`:''].join('');
       return `<article class="moment-card color-${m.color}"><div class="moment-inner">
-        <div class="moment-header"><span class="moment-num">${String(i+1).padStart(2,'0')}</span><div class="moment-heading"><strong>${esc(m.title)}</strong><p class="moment-trigger">${m.trigger?'KHI: '+esc(m.trigger):'Chưa có điểm nhận biết / trigger'}</p></div>
+        <div class="moment-header"><span class="moment-num">${String(i+1).padStart(2,'0')}</span><div class="moment-heading"><strong>${esc(m.title)}</strong><p class="moment-trigger">${m.trigger?'KHI: '+esc(m.trigger):'Chưa có trigger'}</p></div>
         <div class="moment-actions">
           <button class="mini-btn" data-action="moment-up" data-id="${m.id}" title="Đưa lên" aria-label="Đưa moment lên" ${i===0?'disabled':''}>↑</button>
           <button class="mini-btn" data-action="moment-down" data-id="${m.id}" title="Đưa xuống" aria-label="Đưa moment xuống" ${i===s.moments.length-1?'disabled':''}>↓</button>
@@ -271,14 +345,12 @@ textarea{min-height:75px;resize:vertical;line-height:1.5}input::placeholder,text
         ${chips?`<div class="chips">${chips}</div>`:''}
         ${m.prepare?`<p class="note-summary"><b>CHUẨN BỊ:</b> ${esc(m.prepare)}</p>`:''}
         ${m.action?`<p class="note-summary"><b>THỰC HIỆN:</b> ${esc(m.action)}</p>`:''}
-        ${m.notes?`<p class="note-summary"><b>NOTE:</b> ${esc(m.notes)}</p>`:''}
       </div></article>`;
     }).join('');
     return `<div class="main-layout">
-      <div class="page-heading"><div><div class="eyebrow">REHEARSAL / EDIT MODE · PHẦN ${si+1}/${state.sections.length}</div><h1>${esc(s.name)}</h1><p class="subtitle">Ghi lại key moment, dấu hiệu nhận biết và thao tác khi tổng duyệt.</p></div>
-      <div class="heading-actions"><button class="btn btn-quiet btn-sm" data-action="section-up" ${si===0?'disabled':''}>↑ Phần</button><button class="btn btn-quiet btn-sm" data-action="section-down" ${si===state.sections.length-1?'disabled':''}>↓ Phần</button><button class="btn btn-quiet btn-sm" data-action="edit-section" data-id="${s.id}">Sửa phần</button><button class="btn btn-danger-outline btn-sm" data-action="delete-section" data-id="${s.id}">Xóa</button></div></div>
-      ${s.notes?`<div class="section-note">${esc(s.notes)}</div>`:''}
-      <div class="quick-note-launch"><button class="btn btn-sm" type="button" data-action="quick-note-toggle" aria-expanded="${quickNoteOpen?'true':'false'}" aria-controls="quickNoteForm">${quickNoteOpen?'× ĐÓNG QUICK NOTE':'✎ QUICK NOTE · GHI NHANH'}</button><span class="quick-note-hint">Ghi moment ngay khi rehearsal, không cần mở trình sửa chi tiết.</span></div>
+      <div class="page-heading"><div><div class="eyebrow">REHEARSAL · PHẦN ${si+1}/${state.sections.length}</div><h1>${esc(s.name)}</h1></div>
+      <details class="section-manage"><summary>Quản lý phần <span aria-hidden="true">⌄</span></summary><div class="heading-actions"><button class="btn btn-quiet btn-sm" data-action="section-up" ${si===0?'disabled':''}>↑ Phần</button><button class="btn btn-quiet btn-sm" data-action="section-down" ${si===state.sections.length-1?'disabled':''}>↓ Phần</button><button class="btn btn-quiet btn-sm" data-action="edit-section" data-id="${s.id}">Sửa phần</button><button class="btn btn-danger-outline btn-sm" data-action="delete-section" data-id="${s.id}">Xóa</button></div></details></div>
+      <div class="quick-note-launch"><button class="btn btn-sm" type="button" data-action="quick-note-toggle" aria-expanded="${quickNoteOpen?'true':'false'}" aria-controls="quickNoteForm">${quickNoteOpen?'× ĐÓNG':'+ QUICK NOTE'}</button><button type="button" class="btn btn-outline btn-sm" data-action="add-moment" data-section-id="${s.id}">+ MOMENT CHI TIẾT</button></div>
       ${quickNoteOpen?`<form class="quick-note-form" id="quickNoteForm" data-section-id="${esc(s.id)}">
         <div class="form-field"><label for="qn_title">KEY MOMENT *</label><input id="qn_title" name="title" required maxlength="180" placeholder="Ví dụ: MC bước ra sân khấu" autocomplete="off" enterkeyhint="next"></div>
         <div class="form-field"><label for="qn_trigger">KHI NÀO? / DẤU HIỆU NHẬN BIẾT</label><input id="qn_trigger" name="trigger" maxlength="2500" placeholder="Ví dụ: MC nói câu cuối" autocomplete="off" enterkeyhint="next"></div>
@@ -288,12 +360,9 @@ textarea{min-height:75px;resize:vertical;line-height:1.5}input::placeholder,text
         </div>
         <div class="form-field"><label for="qn_action">CẦN LÀM GÌ? (TÙY CHỌN)</label><textarea id="qn_action" name="action" maxlength="2500" rows="2" placeholder="GO / OFF / FLASH / thao tác khác..."></textarea></div>
         <div class="quick-note-actions"><button type="submit" class="btn btn-accent">✓ LƯU & GHI TIẾP</button><button type="button" class="btn btn-quiet" data-action="quick-note-close">ĐÓNG</button></div>
-        <div class="quick-note-tip">Lưu xong sẽ tự tạo một moment mới ở cuối phần này. Có thể chỉnh sửa chi tiết và đổi thứ tự sau. Ctrl/⌘ + Enter để lưu nhanh.</div>
       </form>`:''}
       <div class="list-title"><h2>KEY MOMENTS</h2><span class="count-badge">${s.moments.length} MOMENTS · ${allCount()} TOÀN SHOW</span></div>
-      <div class="moments">${moments||'<div class="empty-state"><strong>Phần này chưa có moment</strong><p>Thêm ghi chú cho từng tín hiệu: MC nói câu nào, nghệ sĩ đứng đâu, chuyển cảnh lúc nào và gọi Executor/Cue nào.</p></div>'}</div>
-      <button class="btn btn-accent" data-action="add-moment" data-section-id="${s.id}">+ THÊM KEY MOMENT</button>
-      <div class="section-hint">Mẹo: Dùng nút ↑ ↓ để sắp thứ tự moment theo diễn biến thực tế. Tất cả thay đổi được tự lưu.</div>
+      <div class="moments">${moments||'<div class="empty-state"><strong>Chưa có moment</strong><p>Nhấn Quick Note để tạo moment đầu tiên.</p></div>'}</div>
     </div>`;
   }
   function fieldBox(label,value) {return `<div class="field-box"><div class="field-label">${label}</div><div class="field-value ${!value?'muted':''}">${txt(value)}</div></div>`;}
@@ -310,18 +379,16 @@ textarea{min-height:75px;resize:vertical;line-height:1.5}input::placeholder,text
     return `<div class="main-layout">
       <div class="live-topbar"><div><div class="eyebrow">LIVE SHOW / MANUAL CUE MONITOR</div><div class="live-counter">Moment <b>${String(idx+1).padStart(2,'0')} / ${arr.length}</b> <span class="live-counts">· Đã xong ${state.doneIds.length}</span></div></div>${selector}</div>
       <div class="live-hero"><div class="live-label">● MOMENT ĐANG CHỜ · ${esc(active.sectionName)}</div><h2>${esc(active.title)}</h2>
-        <div class="live-subtitle">${active.trigger?'Dấu hiệu: '+esc(active.trigger):'Chờ tín hiệu từ sân khấu / Stage Manager'}</div>
+        <div class="live-subtitle">${active.trigger?'KHI: '+esc(active.trigger):'Chờ tín hiệu sân khấu'}</div>
         ${execTags?`<div class="exec-row">${execTags}</div>`:''}
         <div class="divider"></div>
-        <div class="field-grid">${fieldBox('01 / CHUẨN BỊ',active.prepare)}${fieldBox('02 / THỰC HIỆN',active.action)}</div>
-        ${active.notes?`<div style="margin-top:14px">${fieldBox('03 / GHI CHÚ THÊM',active.notes)}</div>`:''}
+        <div class="field-grid">${fieldBox('CHUẨN BỊ',active.prepare)}${fieldBox('THAO TÁC',active.action)}</div>
       </div>
-      <div class="live-actions"><button type="button" class="btn btn-outline" data-action="previous" ${idx===0?'disabled':''}>← LÙI LẠI</button><button type="button" class="btn btn-accent" data-action="next">✓ ${idx===arr.length-1?'HOÀN TẤT SHOW':'ĐÃ XONG · MOMENT TIẾP →'}</button></div>
-      <div class="live-notice">Chỉ nhắc thao tác, KHÔNG gửi GO / OFF / GOTO đến grandMA2. Bấm “Đã xong” sau khi thực hiện trên bàn.</div>
+      <div class="live-actions"><button type="button" class="btn btn-outline" data-action="previous" ${idx===0?'disabled':''}>← LÙI LẠI</button><button type="button" class="btn btn-accent" data-action="next">✓ ${idx===arr.length-1?'HOÀN TẤT SHOW':'XONG · MOMENT TIẾP →'}</button></div>
       <div class="list-title"><h2>${upcoming?'SẮP TỚI':'MOMENT CUỐI CÙNG'}</h2><span class="count-badge">${Math.max(0,arr.length-idx-1)} PHÍA TRƯỚC</span></div>
-      ${upcoming?`<div class="upcoming-grid">${upcoming}</div>`:'<div class="section-hint">Đây là moment cuối. Khi hoàn tất, bấm nút màu đỏ phía trên.</div>'}
+      ${upcoming?`<div class="upcoming-grid">${upcoming}</div>`:'<div class="section-hint"></div>'}
       ${prev?`<div class="upcoming-card last"><small>MOMENT VỪA QUA</small><strong>${esc(prev.title)}</strong><span>${esc(prev.sectionName)}</span></div>`:''}
-      <div class="heading-actions"><button class="btn btn-quiet btn-sm" data-action="edit-moment" data-id="${active.id}">✎ Chỉnh ghi chú moment này</button><button class="btn btn-quiet btn-sm" data-action="reset">↺ Reset trạng thái show</button></div>
+      <div class="heading-actions"><button class="btn btn-quiet btn-sm" data-action="edit-moment" data-id="${active.id}">✎ Sửa moment</button><button class="btn btn-quiet btn-sm" data-action="reset">↺ Reset trạng thái show</button></div>
     </div>`;
   }
   function render() {
@@ -344,7 +411,7 @@ textarea{min-height:75px;resize:vertical;line-height:1.5}input::placeholder,text
     else if (type==='section') {
       const s=id?findSection(id):null;
       $('#dialogTitle').textContent=s?'Chỉnh sửa phần':'Tạo phần mới';
-      form.innerHTML=input('name','TÊN PHẦN / KEY',s?.name||'','required maxlength="140" autofocus placeholder="OPENING / TIẾT MỤC 01 / FINALE"')+area('notes','GHI CHÚ CHUNG CHO PHẦN',s?.notes||'','Ví dụ: Stage Manager gọi standby trước 30s')+foot();
+      form.innerHTML=input('name','TÊN PHẦN / KEY',s?.name||'','required maxlength="140" autofocus placeholder="OPENING / TIẾT MỤC 01 / FINALE"')+foot();
     } else {
       const s=findSection(sectionId),m=id?s?.moments.find(x=>x.id===id):null;
       if (!s) return;
@@ -354,9 +421,8 @@ textarea{min-height:75px;resize:vertical;line-height:1.5}input::placeholder,text
         <div class="form-grid">${input('executor','EXECUTOR TRÊN grandMA2',m?.executor||'','maxlength="180" placeholder="1.101 hoặc 1.101 + 1.105"')}${input('cue','CUE',m?.cue||'','maxlength="180" placeholder="5 / 5.1 / 7 Thru 9"')}</div>
         ${area('prepare','CẦN CHUẨN BỊ',m?.prepare||'','Ví dụ: Standby đèn mặt, bàn nâng, group beam...')}
         ${area('action','KHI ĐẾN MOMENT CẦN LÀM GÌ?',m?.action||'','Ví dụ: GO Executor 1.101 Cue 5; kéo fader 1.202')}
-        ${area('notes','GHI CHÚ THÊM',m?.notes||'','Thông tin đặc biệt từ rehearsal')}
         <div class="form-field"><label for="f_color">MÀU NHẬN BIẾT</label><select id="f_color" name="color">${COLORS.map(c=>`<option value="${c}" ${c===(m?.color||'amber')?'selected':''}>${{amber:'Vàng / Standby',red:'Đỏ / Quan trọng',blue:'Xanh dương / MC',green:'Xanh lá / Go',purple:'Tím / Chuyển cảnh'}[c]}</option>`).join('')}</select></div>
-        <div class="dialog-help">Chỉ là ghi chú. Ứng dụng không gửi lệnh đến bàn điều khiển ánh sáng.</div>${foot()}`;
+        <div class="dialog-help"></div>${foot()}`;
     }
     dlg.showModal();
     setTimeout(()=>form.querySelector('[autofocus]')?.focus(),40);
@@ -388,12 +454,12 @@ textarea{min-height:75px;resize:vertical;line-height:1.5}input::placeholder,text
     if(type==='show') {if(!val('name',140))return;state.name=val('name',140);}
     else if(type==='section') {
       const name=val('name',140);if(!name) return;
-      if(id) {const s=findSection(id);if(!s)return;s.name=name;s.notes=val('notes');}
-      else {const s={id:newId(),name,notes:val('notes'),moments:[]};state.sections.push(s);state.selectedSectionId=s.id;}
+      if(id) {const s=findSection(id);if(!s)return;s.name=name;}
+      else {const s={id:newId(),name,notes:'',moments:[]};state.sections.push(s);state.selectedSectionId=s.id;}
     } else if(type==='moment') {
       const s=findSection(sectionId);if(!s)return;
       const title=val('title',180);if(!title)return;
-      const m={title,trigger:val('trigger'),prepare:val('prepare'),action:val('action'),executor:val('executor',180),cue:val('cue',180),notes:val('notes'),color:COLORS.includes(val('color'))?val('color'):'amber'};
+      const m={title,trigger:val('trigger'),prepare:val('prepare'),action:val('action'),executor:val('executor',180),cue:val('cue',180),notes:(id?(s.moments.find(x=>x.id===id)?.notes||''):''),color:COLORS.includes(val('color'))?val('color'):'amber'};
       if(id){const target=s.moments.find(x=>x.id===id);if(!target)return;Object.assign(target,m);}
       else {m.id=newId();s.moments.push(m); if(!state.cursorId)state.cursorId=m.id;}
       state.selectedSectionId=s.id;
@@ -408,7 +474,7 @@ textarea{min-height:75px;resize:vertical;line-height:1.5}input::placeholder,text
   function downloadJSON(){
     const date=new Date().toISOString().slice(0,10);
     const name=(state.name.normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^\w-]+/g,'_').slice(0,38)||'SHOW');
-    const output={...state,exportedAt:new Date().toISOString(),app:'SOWN Cue Monitor V0.2'};
+    const output={...state,exportedAt:new Date().toISOString(),app:'SOWN Cue Monitor V0.3'};
     const blob=new Blob([JSON.stringify(output,null,2)],{type:'application/json'});
     const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`SOWN_${name}_${date}.json`;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),10000);toast('Đã tạo file JSON để lưu/chia sẻ.');
   }
