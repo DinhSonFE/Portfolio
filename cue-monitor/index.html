@@ -93,6 +93,21 @@ textarea{min-height:75px;resize:vertical;line-height:1.5}input::placeholder,text
   .header {padding-top:calc(14px + env(safe-area-inset-top, 0px));}
 }
 /* Opaque iOS PWA status bar reserves its own space; no extra standalone offset. */
+
+/* Rehearsal Quick Note: fast capture without opening the full editor. */
+.quick-note-launch{display:flex;align-items:center;gap:11px;flex-wrap:wrap}
+.quick-note-launch .btn{background:#4c222b;border-color:#ab4550;color:#fff}
+.quick-note-hint{font-size:12px;color:var(--muted);line-height:1.5}
+.quick-note-form{background:linear-gradient(145deg,#21171e,#13151b);border:1px solid #71343e;border-radius:15px;padding:17px;display:flex;flex-direction:column;gap:13px}
+.quick-note-form .form-field{gap:5px}
+.quick-note-form .form-field label{font-size:11px;letter-spacing:.3px}
+.quick-note-form input,.quick-note-form textarea{background:#101217;border-color:#4a3840}
+.quick-note-form input:focus,.quick-note-form textarea:focus{border-color:#ed727e;outline:1px solid #ed727e}
+.quick-note-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.quick-note-actions{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.quick-note-actions .btn-accent{flex:1;min-height:48px}
+.quick-note-tip{color:#aaa3a7;font-size:11px;line-height:1.5}
+@media(max-width:700px){.quick-note-launch .btn{width:100%;min-height:49px}.quick-note-form{padding:14px}.quick-note-actions .btn{width:100%}.quick-note-actions .btn-quiet{min-height:40px}}
 </style>
 </head>
 <body>
@@ -102,7 +117,7 @@ textarea{min-height:75px;resize:vertical;line-height:1.5}input::placeholder,text
         <div class="brand-mark" aria-hidden="true">S<span>.</span></div>
         <div>
           <div class="brand-top">SOWN<span>LIGHTING</span></div>
-          <div class="brand-bottom">CUE MONITOR <b>V0.1</b></div>
+          <div class="brand-bottom">CUE MONITOR <b>V0.2</b></div>
         </div>
       </div>
       <div class="header-actions">
@@ -159,6 +174,7 @@ textarea{min-height:75px;resize:vertical;line-height:1.5}input::placeholder,text
   const newId = () => (crypto.randomUUID?.() || ('id_' + Date.now() + '_' + Math.random().toString(36).slice(2)));
   const cap = (v, max = 2500) => String(v ?? '').slice(0, max);
   let toastTimer;
+  let quickNoteOpen = false;
 
   const sample = () => {
     const id1 = newId(), id2 = newId();
@@ -262,6 +278,18 @@ textarea{min-height:75px;resize:vertical;line-height:1.5}input::placeholder,text
       <div class="page-heading"><div><div class="eyebrow">REHEARSAL / EDIT MODE · PHẦN ${si+1}/${state.sections.length}</div><h1>${esc(s.name)}</h1><p class="subtitle">Ghi lại key moment, dấu hiệu nhận biết và thao tác khi tổng duyệt.</p></div>
       <div class="heading-actions"><button class="btn btn-quiet btn-sm" data-action="section-up" ${si===0?'disabled':''}>↑ Phần</button><button class="btn btn-quiet btn-sm" data-action="section-down" ${si===state.sections.length-1?'disabled':''}>↓ Phần</button><button class="btn btn-quiet btn-sm" data-action="edit-section" data-id="${s.id}">Sửa phần</button><button class="btn btn-danger-outline btn-sm" data-action="delete-section" data-id="${s.id}">Xóa</button></div></div>
       ${s.notes?`<div class="section-note">${esc(s.notes)}</div>`:''}
+      <div class="quick-note-launch"><button class="btn btn-sm" type="button" data-action="quick-note-toggle" aria-expanded="${quickNoteOpen?'true':'false'}" aria-controls="quickNoteForm">${quickNoteOpen?'× ĐÓNG QUICK NOTE':'✎ QUICK NOTE · GHI NHANH'}</button><span class="quick-note-hint">Ghi moment ngay khi rehearsal, không cần mở trình sửa chi tiết.</span></div>
+      ${quickNoteOpen?`<form class="quick-note-form" id="quickNoteForm" data-section-id="${esc(s.id)}">
+        <div class="form-field"><label for="qn_title">KEY MOMENT *</label><input id="qn_title" name="title" required maxlength="180" placeholder="Ví dụ: MC bước ra sân khấu" autocomplete="off" enterkeyhint="next"></div>
+        <div class="form-field"><label for="qn_trigger">KHI NÀO? / DẤU HIỆU NHẬN BIẾT</label><input id="qn_trigger" name="trigger" maxlength="2500" placeholder="Ví dụ: MC nói câu cuối" autocomplete="off" enterkeyhint="next"></div>
+        <div class="quick-note-grid">
+          <div class="form-field"><label for="qn_executor">EXECUTOR</label><input id="qn_executor" name="executor" maxlength="180" placeholder="1.101" autocomplete="off" enterkeyhint="next"></div>
+          <div class="form-field"><label for="qn_cue">CUE</label><input id="qn_cue" name="cue" maxlength="180" placeholder="2" autocomplete="off" enterkeyhint="next"></div>
+        </div>
+        <div class="form-field"><label for="qn_action">CẦN LÀM GÌ? (TÙY CHỌN)</label><textarea id="qn_action" name="action" maxlength="2500" rows="2" placeholder="GO / OFF / FLASH / thao tác khác..."></textarea></div>
+        <div class="quick-note-actions"><button type="submit" class="btn btn-accent">✓ LƯU & GHI TIẾP</button><button type="button" class="btn btn-quiet" data-action="quick-note-close">ĐÓNG</button></div>
+        <div class="quick-note-tip">Lưu xong sẽ tự tạo một moment mới ở cuối phần này. Có thể chỉnh sửa chi tiết và đổi thứ tự sau. Ctrl/⌘ + Enter để lưu nhanh.</div>
+      </form>`:''}
       <div class="list-title"><h2>KEY MOMENTS</h2><span class="count-badge">${s.moments.length} MOMENTS · ${allCount()} TOÀN SHOW</span></div>
       <div class="moments">${moments||'<div class="empty-state"><strong>Phần này chưa có moment</strong><p>Thêm ghi chú cho từng tín hiệu: MC nói câu nào, nghệ sĩ đứng đâu, chuyển cảnh lúc nào và gọi Executor/Cue nào.</p></div>'}</div>
       <button class="btn btn-accent" data-action="add-moment" data-section-id="${s.id}">+ THÊM KEY MOMENT</button>
@@ -333,6 +361,25 @@ textarea{min-height:75px;resize:vertical;line-height:1.5}input::placeholder,text
     dlg.showModal();
     setTimeout(()=>form.querySelector('[autofocus]')?.focus(),40);
   }
+
+  function submitQuickNote(e) {
+    e.preventDefault();
+    if(state.mode!=='rehearsal')return;
+    const form=e.target;
+    const section=findSection(form.dataset.sectionId);
+    if(!section){toast('Không tìm thấy phần đang ghi chú.');return;}
+    const data=new FormData(form);
+    const val=(name,max=2500)=>cap(data.get(name),max).trim();
+    const title=val('title',180);
+    if(!title){form.querySelector('[name="title"]')?.focus();return;}
+    const moment={id:newId(),title,trigger:val('trigger'),executor:val('executor',180),cue:val('cue',180),prepare:'',action:val('action'),notes:'',color:'amber'};
+    section.moments.push(moment);
+    if(!state.cursorId)state.cursorId=moment.id;
+    state.selectedSectionId=section.id;
+    commit();
+    toast('Đã lưu Quick Note • '+section.moments.length+' moment trong phần này');
+    document.querySelector('#qn_title')?.focus();
+  }
   function editorSubmit(e) {
     e.preventDefault();
     const dlg=$('#editorDialog');const f=new FormData(e.currentTarget);
@@ -357,11 +404,11 @@ textarea{min-height:75px;resize:vertical;line-height:1.5}input::placeholder,text
   function moveItem(array,index,direction){const to=index+direction;if(to<0||to>=array.length)return;[array[index],array[to]]=[array[to],array[index]];}
   function next() {const arr=flatMoments();if(!arr.length)return;const idx=arr.findIndex(m=>m.id===state.cursorId);if(idx<0||state.ended)return;state.doneIds=[...new Set([...state.doneIds,state.cursorId])];if(idx===arr.length-1)state.ended=true;else state.cursorId=arr[idx+1].id;commit({scrollTop:true});}
   function previous(){const arr=flatMoments();if(state.ended){state.ended=false;state.doneIds=state.doneIds.filter(x=>x!==state.cursorId);commit({scrollTop:true});return;}const idx=arr.findIndex(m=>m.id===state.cursorId);if(idx<=0)return;state.cursorId=arr[idx-1].id;state.doneIds=state.doneIds.filter(x=>x!==state.cursorId);commit({scrollTop:true});}
-  function switchMode(mode){state.mode=mode;commit({scrollTop:true});}
+  function switchMode(mode){if(mode==='show')quickNoteOpen=false;state.mode=mode;commit({scrollTop:true});}
   function downloadJSON(){
     const date=new Date().toISOString().slice(0,10);
     const name=(state.name.normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^\w-]+/g,'_').slice(0,38)||'SHOW');
-    const output={...state,exportedAt:new Date().toISOString(),app:'SOWN Cue Monitor V0.1'};
+    const output={...state,exportedAt:new Date().toISOString(),app:'SOWN Cue Monitor V0.2'};
     const blob=new Blob([JSON.stringify(output,null,2)],{type:'application/json'});
     const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`SOWN_${name}_${date}.json`;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),10000);toast('Đã tạo file JSON để lưu/chia sẻ.');
   }
@@ -380,6 +427,8 @@ textarea{min-height:75px;resize:vertical;line-height:1.5}input::placeholder,text
       case 'add-section':openDialog('section');break;
       case 'edit-section':openDialog('section',id);break;
       case 'add-moment':openDialog('moment',null,b.dataset.sectionId);break;
+      case 'quick-note-toggle':quickNoteOpen=!quickNoteOpen;render();if(quickNoteOpen)document.querySelector('#qn_title')?.focus();break;
+      case 'quick-note-close':quickNoteOpen=false;render();break;
       case 'edit-moment':{const target=locateMoment(id);if(target)openDialog('moment',id,target.section.id);break;}
       case 'select-section':{
         const s=findSection(id);if(!s)return;
@@ -418,6 +467,8 @@ textarea{min-height:75px;resize:vertical;line-height:1.5}input::placeholder,text
   }
   document.addEventListener('click',handleButton);
   $('#editorForm').addEventListener('submit',editorSubmit);
+  document.addEventListener('submit',e=>{if(e.target.id==='quickNoteForm')submitQuickNote(e);});
+  document.addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)&&e.target.closest?.('#quickNoteForm')){e.preventDefault();e.target.closest('#quickNoteForm').requestSubmit();}});
   $('#importFile').addEventListener('change',e=>{importJSON(e.target.files?.[0]);e.target.value='';});
   document.addEventListener('change',e=>{
     if(e.target.id==='sectionJump'){
