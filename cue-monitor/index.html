@@ -87,6 +87,16 @@ textarea{min-height:75px;resize:vertical;line-height:1.5}input::placeholder,text
   .header-actions .save-dot{margin-right:2px;flex-shrink:0}
 }
 
+
+/* iPhone notch / Dynamic Island: keep the app header below the system status bar. */
+@media (max-width:700px) {
+  .header {padding-top:calc(14px + env(safe-area-inset-top, 0px));}
+}
+/* Installed iOS web apps with black-translucent status bars can report a 0px inset
+   on some launch paths. Keep a minimum reserved status-bar height only in PWA mode. */
+@media (max-width:700px) and (display-mode:standalone) {
+  .header {padding-top:calc(14px + max(52px, env(safe-area-inset-top, 0px)));}
+}
 </style>
 </head>
 <body>
