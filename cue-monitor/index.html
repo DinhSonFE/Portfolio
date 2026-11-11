@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0b0c10">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="SOWN Cues">
+  <meta name="description" content="SOWN Cue Monitor — sổ cue cho rehearsal và live show, không cần timecode.">
+  
+  
+  
+  
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" type="image/svg+xml" href="./icon.svg">
+  <title>SOWN Cue Monitor</title>
+<style>
+:root{color-scheme:dark;--bg:#0b0c10;--panel:#12141a;--panel2:#191b23;--line:#2a2d37;--text:#f4f5f7;--muted:#9ba0ad;--faint:#737986;--accent:#ed444e;--accent-soft:#361c23;--green:#58c694;--amber:#e8b35e;--blue:#68aafa;--purple:#b39dfe;--radius:15px;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif}
+*{box-sizing:border-box}
+html{min-height:100%;background:var(--bg)}
+body{margin:0;background:var(--bg);color:var(--text);font-size:15px;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer;-webkit-tap-highlight-color:transparent}
+button:disabled{opacity:.42;cursor:not-allowed}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.app-shell{min-height:100dvh;display:flex;flex-direction:column;max-width:1600px;margin:auto}
+.header{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:19px 30px;border-bottom:1px solid var(--line);background:#0e0f13}
+.brand{display:flex;align-items:center;gap:12px;flex-shrink:0}
+.brand-mark{height:43px;width:43px;border-radius:12px;background:linear-gradient(145deg,#fb4b56,#aa1c29);display:grid;place-items:center;font-weight:900;font-size:28px;letter-spacing:-3px;box-shadow:0 4px 22px #f1434336}
+.brand-mark span{color:#ffa9ae}
+.brand-top{font-size:13px;font-weight:850;letter-spacing:1.4px}
+.brand-top span{color:var(--faint);font-weight:600;margin-left:5px}
+.brand-bottom{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1.5px;margin-top:3px}
+.brand-bottom b{color:var(--accent);font-size:10px}
+.header-actions{display:flex;align-items:center;gap:9px;flex-wrap:wrap;justify-content:flex-end}
+.save-state{font-size:11px;color:var(--muted);white-space:nowrap;margin-right:5px}
+.save-dot{display:inline-block;height:7px;width:7px;border-radius:50%;background:var(--green);margin-right:5px}
+.btn,.icon-btn{background:#24262e;color:var(--text);border:1px solid #353841;border-radius:10px;min-height:42px;padding:10px 15px;font-weight:650;transition:background .15s,border-color .15s}
+.btn:hover,.icon-btn:hover{background:#30343e}
+.btn-sm{font-size:12px;min-height:35px;padding:7px 12px}
+.btn-quiet{background:#181a20;border-color:#292d35;color:#cfd1d8}
+.btn-danger-outline{background:transparent;color:#e58e95;border-color:#6d303b}
+.btn-accent{background:var(--accent);border-color:#ed444e;color:#fff}
+.btn-accent:hover{background:#d93642}
+.btn-outline{background:transparent;border-color:#454a55}
+.btn-ghost{background:transparent;border-color:transparent;color:var(--muted)}
+.btn-icon-text{display:inline-flex;align-items:center;gap:7px}
+.icon-btn{height:40px;min-height:40px;width:40px;padding:0;display:grid;place-items:center;font-size:24px;line-height:1}
+.showbar{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:22px 30px;border-bottom:1px solid var(--line)}
+.show-identity{min-width:0}.eyebrow{font-size:10px;font-weight:750;letter-spacing:1.65px;color:var(--faint);text-transform:uppercase}.show-name{display:block;background:none;border:0;color:var(--text);font-size:25px;letter-spacing:-.6px;font-weight:800;padding:5px 0;text-align:left;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.show-name:hover{text-decoration:underline;text-decoration-color:#ba414a}
+.mode-tabs{display:flex;gap:5px;padding:4px;border:1px solid #343641;background:#17191f;border-radius:12px;flex-shrink:0}
+.mode-tab{border:0;background:transparent;border-radius:9px;padding:11px 15px;color:#8f95a2;font-size:12px;letter-spacing:.5px;font-weight:800;min-height:43px}
+.mode-tab.active{background:#39212a;color:#ff9399;box-shadow:inset 0 0 0 1px #6c3037}
+.workspace{display:grid;grid-template-columns:300px minmax(0,1fr);min-height:0;flex:1}
+.sidebar{border-right:1px solid var(--line);background:#101116;padding:23px 17px 16px;display:flex;flex-direction:column;gap:20px}
+.sidebar-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 5px}.sidebar-head h2{font-size:17px;margin:5px 0 0;letter-spacing:-.1px}.sections{display:flex;flex-direction:column;gap:7px}
+.section-item{width:100%;background:transparent;color:#b1b5bf;border:1px solid transparent;border-radius:10px;padding:12px 12px;display:flex;gap:12px;align-items:center;text-align:left;min-height:62px}
+.section-item:hover{background:#1a1c23}.section-item.active{background:#2a1a21;border-color:#6d313b;color:#fff}
+.section-index{color:var(--faint);font-size:12px;font-variant-numeric:tabular-nums;font-weight:700}.section-item.active .section-index{color:#ff8591}
+.section-info{display:flex;flex:1;flex-direction:column;gap:4px;min-width:0}.section-info strong{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.section-info small{font-size:11px;color:#7c8290}.sidebar-foot{border-top:1px solid var(--line);margin-top:auto;padding:16px 5px 0;display:flex;justify-content:space-between;gap:8px;color:var(--faint);font-size:10px}.pill{font-size:10px;color:var(--green);border:1px solid #31684c;border-radius:20px;padding:3px 7px;height:fit-content}
+.main{min-width:0;padding:30px clamp(18px,3vw,44px) 50px}.main-layout{max-width:1050px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
+.page-heading{display:flex;align-items:start;justify-content:space-between;gap:15px}.page-heading h1{font-size:clamp(26px,3vw,36px);font-weight:850;letter-spacing:-1px;margin:7px 0 5px}.subtitle{font-size:13px;color:var(--muted);line-height:1.6;margin:0}.heading-actions{display:flex;gap:7px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.panel{border:1px solid var(--line);background:var(--panel);border-radius:var(--radius);padding:21px}.section-note{border-left:3px solid var(--accent);padding:13px 17px;background:#1e1a20;border-radius:0 10px 10px 0;color:#c8c0c4;white-space:pre-wrap;font-size:13px;line-height:1.55}
+.section-hint{display:flex;gap:9px;align-items:center;color:var(--faint);font-size:12px}.list-title{display:flex;align-items:center;justify-content:space-between;gap:10px}.list-title h2{font-size:14px;letter-spacing:1px;text-transform:uppercase;margin:0}.count-badge{border-radius:20px;background:#242730;border:1px solid #323641;color:#a5aab5;padding:5px 10px;font-weight:800;font-size:11px}
+.moments{display:flex;flex-direction:column;gap:10px}.moment-card{border:1px solid #2f323d;border-radius:13px;background:#171922;overflow:hidden;border-left:4px solid var(--amber)}
+.moment-card.color-red{border-left-color:var(--accent)}.moment-card.color-blue{border-left-color:var(--blue)}.moment-card.color-green{border-left-color:var(--green)}.moment-card.color-purple{border-left-color:var(--purple)}.moment-card.color-amber{border-left-color:var(--amber)}
+.moment-inner{padding:16px 17px}.moment-header{display:flex;gap:12px;align-items:start}.moment-num{font-size:11px;color:var(--faint);font-weight:800;min-width:27px;padding-top:4px}.moment-heading{flex:1;min-width:0}.moment-heading strong{font-size:17px;display:block;line-height:1.4}.moment-trigger{font-size:13px;color:var(--muted);margin:5px 0 0;line-height:1.45;white-space:pre-wrap}.moment-actions{display:flex;gap:3px;flex-wrap:wrap;justify-content:flex-end}.mini-btn{border:1px solid transparent;background:transparent;color:#9398a5;border-radius:8px;padding:8px;min-height:34px;min-width:34px;font-size:12px}.mini-btn:hover{background:#2a2c37;color:white}.mini-btn.danger:hover{background:#46232a;color:#ff9ca4}
+.chips{display:flex;gap:7px;flex-wrap:wrap;margin-top:13px}.chip{background:#242730;color:#d1d4df;border:1px solid #383b46;padding:6px 9px;border-radius:7px;font-size:12px;font-weight:700}.chip b{font-weight:500;color:#8d93a1;margin-right:5px}
+.note-summary{font-size:13px;color:#b9bdc7;margin:13px 0 0;line-height:1.5;white-space:pre-wrap}.note-summary b{color:#e2e4eb}.empty-state{border:1px dashed #454852;border-radius:15px;text-align:center;color:var(--muted);padding:45px 20px}.empty-state strong{display:block;color:#f5f5f5;font-size:18px;margin-bottom:12px}.empty-state p{max-width:370px;margin:0 auto 18px;font-size:13px;line-height:1.6}
+.live-topbar{display:flex;gap:10px;align-items:center;justify-content:space-between}.live-counter{font-size:13px;color:var(--muted);font-weight:700}.live-counter b{color:#fff}.live-counts{color:var(--faint);font-size:12px}.live-section-picker{display:flex;gap:8px;align-items:center;min-width:0}.live-section-picker label{font-size:11px;color:var(--muted);white-space:nowrap}.live-section-picker select{min-width:180px;max-width:240px;flex:1}
+.live-hero{border:1px solid #702b36;border-radius:20px;background:linear-gradient(145deg,#2a171e 0%,#17171e 64%);padding:26px;position:relative;overflow:hidden}.live-hero:before{content:"";position:absolute;width:190px;height:190px;border-radius:50%;top:-110px;right:-80px;background:#8f1d2d;filter:blur(80px);opacity:.28;pointer-events:none}.live-hero .live-label{color:#ff8f99;font-size:12px;font-weight:900;letter-spacing:1.6px}.live-hero h2{font-size:clamp(28px,4vw,45px);letter-spacing:-1.4px;line-height:1.11;margin:13px 0 12px;max-width:780px;overflow-wrap:anywhere}.live-subtitle{font-size:14px;color:#d1a9b1;margin-bottom:17px}.divider{height:1px;background:#46404b;margin:18px 0}.field-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.field-box{background:#12141ac9;border:1px solid #3b333e;border-radius:12px;padding:15px;min-width:0}.field-label{font-size:10px;letter-spacing:1.3px;color:var(--faint);font-weight:800;margin-bottom:9px}.field-value{font-size:15px;font-weight:700;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere}.field-value.muted{color:#8a8d98;font-weight:400}.exec-row{display:flex;gap:8px;flex-wrap:wrap}.exec-tag{background:#342128;border:1px solid #7b3840;border-radius:10px;padding:12px 14px;min-width:118px}.exec-tag strong{display:block;font-size:21px;letter-spacing:.4px;margin-top:5px;overflow-wrap:anywhere}.exec-tag label{color:#c37c86;font-size:10px;letter-spacing:1px;font-weight:800}.exec-tag.cue{background:#242631;border-color:#4a4e60}.exec-tag.cue label{color:#a3a9be}
+.live-actions{display:flex;gap:11px;align-items:stretch}.live-actions .btn{min-height:60px;font-size:15px}.live-actions .btn-accent{flex:1;font-size:16px;letter-spacing:.2px}.live-actions .btn-outline{min-width:118px}.live-notice{text-align:center;color:#777e8c;font-size:11px;line-height:1.6}.upcoming-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.upcoming-card{border:1px solid var(--line);background:#161820;border-radius:13px;padding:17px;text-align:left;color:var(--text)}.upcoming-card:hover{background:#20232c}.upcoming-card small{color:var(--faint);font-size:10px;letter-spacing:1px;font-weight:800}.upcoming-card strong{display:block;margin:9px 0 6px;font-size:16px;line-height:1.4}.upcoming-card span{color:#969ba6;font-size:12px;line-height:1.5}.upcoming-card.last{cursor:default;color:var(--muted)}.completed{color:var(--green);font-size:12px}
+.live-finish{text-align:center;border:1px solid #347555;background:#12291e;border-radius:16px;padding:70px 20px}.live-finish h2{font-size:36px;margin:12px 0}.live-finish p{color:#aad2bd}.live-finish .buttons{display:flex;gap:10px;justify-content:center;margin-top:24px;flex-wrap:wrap}
+select,input,textarea{border:1px solid #3b404a;border-radius:10px;background:#1b1e25;color:#f4f5f7;min-height:43px;padding:10px 12px;max-width:100%;width:100%;outline:none;font-size:15px}
+textarea{min-height:75px;resize:vertical;line-height:1.5}input::placeholder,textarea::placeholder{color:#686e7b}option{color:#fff;background:#1b1e25}.editor-dialog{border:1px solid #464953;background:#15171d;color:var(--text);padding:0;border-radius:18px;width:min(630px,calc(100vw - 24px));max-height:min(90dvh,900px);box-shadow:0 24px 100px #000a}.editor-dialog::backdrop{background:#000b;backdrop-filter:blur(5px)}.dialog-inner{display:flex;flex-direction:column;max-height:min(90dvh,900px)}.dialog-head{padding:20px 22px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line)}.dialog-head h2{font-size:20px;margin:0}.form-body{padding:20px 22px;display:flex;flex-direction:column;gap:15px;overflow-y:auto;overscroll-behavior:contain}.form-field{display:flex;flex-direction:column;gap:7px}.form-field label{font-size:12px;color:#b4b7bf;font-weight:700}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.form-actions{position:sticky;bottom:-20px;background:#15171d;border-top:1px solid var(--line);margin:5px -22px -20px;padding:14px 22px 22px;display:flex;justify-content:flex-end;gap:10px}.dialog-help{font-size:12px;color:#9297a1;line-height:1.5}.toast{position:fixed;bottom:calc(20px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%) translateY(100px);background:#262b32;border:1px solid #515964;padding:12px 19px;border-radius:12px;color:#fff;font-size:13px;box-shadow:0 10px 45px #000a;opacity:0;pointer-events:none;transition:transform .25s,opacity .25s;z-index:999;max-width:calc(100vw - 24px);text-align:center}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}.footer{border-top:1px solid var(--line);padding:15px 30px;color:#717783;font-size:10px;font-weight:700;letter-spacing:1px;display:flex;justify-content:space-between;gap:10px}.footer span{letter-spacing:0;font-weight:400}
+@media(max-width:950px){.header{padding:14px 17px;align-items:flex-start}.header-actions{max-width:340px}.showbar{padding:17px}.workspace{grid-template-columns:260px minmax(0,1fr)}.main{padding:23px 18px 32px}.field-grid{grid-template-columns:1fr}.show-name{font-size:22px}}
+@media(max-width:700px){.header{flex-direction:column;gap:12px}.header-actions{max-width:unset;width:100%;justify-content:space-between;gap:6px}.header-actions .save-state{flex:1;min-width:90px}.header-actions .btn{font-size:11px;padding:7px 9px}.brand-mark{height:39px;width:39px}.showbar{align-items:stretch;flex-direction:column;gap:11px;padding:17px}.show-name{font-size:22px}.mode-tabs{width:100%}.mode-tab{flex:1}.workspace{display:block}.sidebar{border-right:0;border-bottom:1px solid var(--line);gap:10px;padding:15px 13px}.sidebar-head{padding:0 3px}.sections{display:flex;flex-direction:row;overflow:auto;gap:7px;padding-bottom:3px;scrollbar-width:none}.sections::-webkit-scrollbar{display:none}.section-item{min-width:153px;width:auto;max-width:190px;padding:10px 12px;min-height:55px}.sidebar-foot{display:none}.main{padding:22px 15px 42px}.page-heading{flex-direction:column;gap:12px}.page-heading h1{font-size:29px}.heading-actions{width:100%;justify-content:flex-start}.live-hero{padding:21px 18px}.live-hero h2{font-size:33px;letter-spacing:-.7px}.live-actions{position:sticky;bottom:0;z-index:5;background:linear-gradient(0deg,#0b0c10 75%,#0b0c10e8 90%,transparent 100%);padding:15px 0 calc(12px + env(safe-area-inset-bottom));margin-top:-8px}.live-actions .btn{min-height:62px}.live-actions .btn-outline{min-width:91px}.live-section-picker select{min-width:0;max-width:100%}.upcoming-grid{grid-template-columns:1fr}.footer{padding:14px 16px calc(14px + env(safe-area-inset-bottom));flex-direction:column}.workspace.show-mode .sidebar{display:none}.moment-inner{padding:14px}.moment-heading strong{font-size:16px}.moment-header{gap:7px}.moment-actions{max-width:90px}.form-grid{grid-template-columns:1fr}}
+@media(max-width:360px){.header-actions .btn{font-size:10px;padding:6px 7px}.mode-tab{font-size:10px}.live-hero h2{font-size:28px}.live-actions .btn{font-size:12px}.live-actions .btn-accent{font-size:13px}}
+/* Keep moment editing controls on a separate row on narrow phones. */
+@media(max-width:700px){
+  .moment-header{flex-wrap:wrap}
+  .moment-header .moment-actions{width:100%;max-width:none;justify-content:flex-end;flex-wrap:nowrap;gap:4px;margin-top:-2px}
+  .moment-header .moment-actions .mini-btn{min-width:38px;min-height:36px;padding:8px 10px}
+  .header-actions .save-state{display:flex;align-items:center;gap:4px}
+  .header-actions .save-dot{margin-right:2px;flex-shrink:0}
+}
+
+</style>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="header">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">S<span>.</span></div>
+        <div>
+          <div class="brand-top">SOWN<span>LIGHTING</span></div>
+          <div class="brand-bottom">CUE MONITOR <b>V0.1</b></div>
+        </div>
+      </div>
+      <div class="header-actions">
+        <span class="save-state" id="saveState"><span class="save-dot"></span> Lưu trên máy</span>
+        <button class="btn btn-quiet btn-sm" type="button" data-action="import">Nhập JSON</button>
+        <button class="btn btn-quiet btn-sm" type="button" data-action="export">Xuất backup</button>
+        <button class="btn btn-danger-outline btn-sm" type="button" data-action="new-show">Show mới</button>
+      </div>
+    </header>
+
+    <div class="showbar">
+      <div class="show-identity">
+        <span class="eyebrow">SHOW / PROJECT</span>
+        <button type="button" class="show-name" data-action="rename-show" id="showName" title="Đổi tên show">—</button>
+      </div>
+      <div class="mode-tabs" role="group" aria-label="Chế độ hoạt động">
+        <button type="button" data-action="switch-mode" data-mode="rehearsal" id="modeRehearsal" class="mode-tab">✎ <span>REHEARSAL</span></button>
+        <button type="button" data-action="switch-mode" data-mode="show" id="modeShow" class="mode-tab">◉ <span>LIVE SHOW</span></button>
+      </div>
+    </div>
+
+    <div class="workspace" id="workspace">
+      <aside class="sidebar" aria-label="Danh sách các phần trong show">
+        <div class="sidebar-head">
+          <div><div class="eyebrow">SHOW STRUCTURE</div><h2>Danh sách phần</h2></div>
+          <button type="button" class="icon-btn" data-action="add-section" title="Thêm phần" aria-label="Thêm phần">+</button>
+        </div>
+        <div class="sections" id="sections"></div>
+        <div class="sidebar-foot"><span>Ghi chú rehearsal · Vận hành thủ công</span><span class="pill">OFFLINE</span></div>
+      </aside>
+      <main class="main" id="main" aria-live="polite"></main>
+    </div>
+    <footer class="footer">SOWN CUE MONITOR <span>Không điều khiển grandMA2 · Không cần nhạc hoặc timecode</span></footer>
+  </div>
+
+  <dialog id="editorDialog" class="editor-dialog" aria-labelledby="dialogTitle">
+    <div class="dialog-inner">
+      <div class="dialog-head"><h2 id="dialogTitle"></h2><button type="button" class="icon-btn" data-action="close-dialog" aria-label="Đóng">×</button></div>
+      <form id="editorForm" class="form-body"></form>
+    </div>
+  </dialog>
+  <input type="file" id="importFile" accept="application/json,.json" hidden>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  
+<script>
+/* SOWN Cue Monitor v0.1 — all data stays in this browser unless exported. */
+(() => {
+  'use strict';
+  const KEY = 'sown_cue_monitor_data_v01';
+  const COLORS = ['amber', 'red', 'blue', 'green', 'purple'];
+  const $ = (selector) => document.querySelector(selector);
+  const esc = (value) => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const txt = (value, fallback = 'Chưa ghi chú') => value ? esc(value) : `<span class="muted">${esc(fallback)}</span>`;
+  const newId = () => (crypto.randomUUID?.() || ('id_' + Date.now() + '_' + Math.random().toString(36).slice(2)));
+  const cap = (v, max = 2500) => String(v ?? '').slice(0, max);
+  let toastTimer;
+
+  const sample = () => {
+    const id1 = newId(), id2 = newId();
+    const m1 = newId(), m2 = newId(), m3 = newId(), m4 = newId(), m5 = newId();
+    return {
+      schema:1, name:'DEMO / SHOW RUNDOWN', mode:'rehearsal', selectedSectionId:id1, cursorId:m1,
+      ended:false, doneIds:[], sections:[
+        {id:id1, name:'OPENING', notes:'Đây là show mẫu. Hãy thay nội dung bằng rundown thật sau rehearsal.', moments:[
+          {id:m1,title:'Standby Opening',trigger:'Trước khi MC bước ra',prepare:'Kiểm tra các executor, chuẩn bị Blackout.',action:'Sẵn sàng cue mở màn; chờ tín hiệu từ Stage Manager.',executor:'1.101',cue:'1',notes:'Xác nhận liên lạc bộ đàm.',color:'amber'},
+          {id:m2,title:'MC bước ra sân khấu',trigger:'MC xuất hiện từ cánh gà',prepare:'Chuẩn bị đèn mặt MC.',action:'GO cue mở đèn mặt theo vị trí MC.',executor:'1.101',cue:'2',notes:'Theo dõi MC trên màn hình camera.',color:'blue'},
+          {id:m3,title:'Reveal / Mở màn',trigger:'MC nói “Xin bắt đầu”',prepare:'Standby beam và strobe.',action:'GO cue Reveal, sau đó chuyển sang look đầu tiên.',executor:'1.101 + 1.105',cue:'3',notes:'Đây là ví dụ minh hoạ, không phải cue thật của show.',color:'red'}
+        ]},
+        {id:id2,name:'TIẾT MỤC 01',notes:'Nhập các key moment của tiết mục khi tổng duyệt.', moments:[
+          {id:m4,title:'Artist Walk-in',trigger:'Ca sĩ bước ra từ sân khấu phải',prepare:'Chuẩn bị Follow / Face light.',action:'Nâng sáng mặt, giữ background thấp.',executor:'1.201',cue:'1',notes:'Quan sát hướng di chuyển thực tế.',color:'green'},
+          {id:m5,title:'Kết tiết mục / Blackout',trigger:'Ca sĩ kết thúc, bắt đầu cúi chào',prepare:'Standby blackout và chuyển cảnh.',action:'GO cue cuối khi có hiệu lệnh Stage Manager.',executor:'1.201',cue:'8',notes:'Xác nhận sân khấu đã trống trước khi sang phần tiếp.',color:'purple'}
+        ]}
+      ]
+    };
+  };
+
+  function normalize(obj) {
+    if (!obj || typeof obj !== 'object' || !Array.isArray(obj.sections)) throw Error('File JSON không có cấu trúc Show hợp lệ.');
+    if (obj.sections.length > 100) throw Error('Show có quá nhiều phần (giới hạn 100).');
+    const sectionMap = new Map(), momentMap = new Map();
+    let momentCount = 0;
+    const sections = obj.sections.map(s => {
+      const sectionId = newId();
+      sectionMap.set(String(s.id), sectionId);
+      if (!Array.isArray(s.moments)) throw Error('Một phần trong show không có danh sách moment hợp lệ.');
+      momentCount += s.moments.length;
+      if (momentCount > 2000) throw Error('Show có quá nhiều moment (giới hạn 2000).');
+      return {id:sectionId,name:cap(s.name,140) || 'Phần chưa đặt tên',notes:cap(s.notes),moments:s.moments.map(m => {
+        const mid = newId(); momentMap.set(String(m.id),mid);
+        return {id:mid,title:cap(m.title,180)||'Moment chưa đặt tên',trigger:cap(m.trigger),prepare:cap(m.prepare),action:cap(m.action),executor:cap(m.executor,180),cue:cap(m.cue,180),notes:cap(m.notes),color:COLORS.includes(m.color) ? m.color : 'amber'};
+      })};
+    });
+    const first = sections.flatMap(s=>s.moments)[0]?.id || null;
+    const done = Array.isArray(obj.doneIds) ? [...new Set(obj.doneIds.map(x=>momentMap.get(String(x))).filter(Boolean))] : [];
+    return {schema:1,name:cap(obj.name,140)||'SHOW MỚI',mode:obj.mode==='show'?'show':'rehearsal',selectedSectionId:sectionMap.get(String(obj.selectedSectionId)) || sections[0]?.id || null,cursorId:momentMap.get(String(obj.cursorId))||first,ended:!!obj.ended && !!first,doneIds:done,sections};
+  }
+
+  function load() {
+    try {
+      const raw = localStorage.getItem(KEY);
+      if (!raw) return sample();
+      const parsed = JSON.parse(raw);
+      // Use the same normalization for imported and locally restored data.
+      return normalize(parsed);
+    } catch (err) {
+      console.warn('Could not read saved rundown:', err);
+      return sample();
+    }
+  }
+  let state = load();
+  function save() {
+    try { localStorage.setItem(KEY, JSON.stringify(state)); $('#saveState').innerHTML = '<span class="save-dot"></span> Đã tự lưu'; }
+    catch (err) { $('#saveState').textContent = 'Không lưu được • Hãy xuất backup'; console.error(err); }
+  }
+  function commit({scrollTop=false}={}) { save(); render(); if (scrollTop) window.scrollTo({top:0,behavior:'instant'}); }
+  function toast(message) {const el=$('#toast'); el.textContent=message; el.classList.add('show'); clearTimeout(toastTimer); toastTimer=setTimeout(()=>el.classList.remove('show'),2700);}
+  function findSection(id) {return state.sections.find(s=>s.id===id);}
+  function flatMoments() {return state.sections.flatMap(section => section.moments.map((moment,index)=>({...moment,sectionId:section.id,sectionName:section.name,sectionIndex:index})));}
+  function allCount() {return state.sections.reduce((n,s)=>n+s.moments.length,0);}
+  function ensureCursor() {
+    const arr=flatMoments();
+    if (!arr.some(x=>x.id===state.cursorId)) {state.cursorId=arr[0]?.id||null;state.ended=false;}
+    state.doneIds=state.doneIds.filter(id=>arr.some(m=>m.id===id));
+    if (!state.sections.some(s=>s.id===state.selectedSectionId)) state.selectedSectionId=state.sections[0]?.id||null;
+  }
+  function renderSidebar() {
+    const live=state.mode==='show';
+    const current=flatMoments().find(x=>x.id===state.cursorId);
+    const sectionId=live && current ? current.sectionId : state.selectedSectionId;
+    $('#sections').innerHTML = state.sections.map((s,i)=>
+      `<button type="button" class="section-item ${s.id===sectionId?'active':''}" data-action="select-section" data-id="${esc(s.id)}">
+        <span class="section-index">${String(i+1).padStart(2,'0')}</span><span class="section-info"><strong>${esc(s.name)}</strong><small>${s.moments.length} KEY MOMENT${s.moments.length===1?'':'S'}</small></span>
+      </button>`).join('') || '<div class="empty-state">Chưa có phần nào.</div>';
+  }
+  function renderRehearsal() {
+    const s=findSection(state.selectedSectionId) || state.sections[0];
+    if (!s) return `<div class="main-layout"><div class="empty-state"><strong>Bắt đầu show mới</strong><p>Tạo phần đầu tiên như OPENING, INTRO hoặc TIẾT MỤC 01.</p><button class="btn btn-accent" data-action="add-section">+ THÊM PHẦN</button></div></div>`;
+    const si=state.sections.indexOf(s);
+    const moments=s.moments.map((m,i)=>{
+      const chips=[m.executor?`<span class="chip"><b>EXEC</b>${esc(m.executor)}</span>`:'',m.cue?`<span class="chip"><b>CUE</b>${esc(m.cue)}</span>`:''].join('');
+      return `<article class="moment-card color-${m.color}"><div class="moment-inner">
+        <div class="moment-header"><span class="moment-num">${String(i+1).padStart(2,'0')}</span><div class="moment-heading"><strong>${esc(m.title)}</strong><p class="moment-trigger">${m.trigger?'KHI: '+esc(m.trigger):'Chưa có điểm nhận biết / trigger'}</p></div>
+        <div class="moment-actions">
+          <button class="mini-btn" data-action="moment-up" data-id="${m.id}" title="Đưa lên" aria-label="Đưa moment lên" ${i===0?'disabled':''}>↑</button>
+          <button class="mini-btn" data-action="moment-down" data-id="${m.id}" title="Đưa xuống" aria-label="Đưa moment xuống" ${i===s.moments.length-1?'disabled':''}>↓</button>
+          <button class="mini-btn" data-action="edit-moment" data-id="${m.id}" title="Sửa moment" aria-label="Sửa moment">✎</button>
+          <button class="mini-btn" data-action="clone-moment" data-id="${m.id}" title="Nhân bản" aria-label="Nhân bản moment">⧉</button>
+          <button class="mini-btn danger" data-action="delete-moment" data-id="${m.id}" title="Xóa moment" aria-label="Xóa moment">×</button>
+        </div></div>
+        ${chips?`<div class="chips">${chips}</div>`:''}
+        ${m.prepare?`<p class="note-summary"><b>CHUẨN BỊ:</b> ${esc(m.prepare)}</p>`:''}
+        ${m.action?`<p class="note-summary"><b>THỰC HIỆN:</b> ${esc(m.action)}</p>`:''}
+        ${m.notes?`<p class="note-summary"><b>NOTE:</b> ${esc(m.notes)}</p>`:''}
+      </div></article>`;
+    }).join('');
+    return `<div class="main-layout">
+      <div class="page-heading"><div><div class="eyebrow">REHEARSAL / EDIT MODE · PHẦN ${si+1}/${state.sections.length}</div><h1>${esc(s.name)}</h1><p class="subtitle">Ghi lại key moment, dấu hiệu nhận biết và thao tác khi tổng duyệt.</p></div>
+      <div class="heading-actions"><button class="btn btn-quiet btn-sm" data-action="section-up" ${si===0?'disabled':''}>↑ Phần</button><button class="btn btn-quiet btn-sm" data-action="section-down" ${si===state.sections.length-1?'disabled':''}>↓ Phần</button><button class="btn btn-quiet btn-sm" data-action="edit-section" data-id="${s.id}">Sửa phần</button><button class="btn btn-danger-outline btn-sm" data-action="delete-section" data-id="${s.id}">Xóa</button></div></div>
+      ${s.notes?`<div class="section-note">${esc(s.notes)}</div>`:''}
+      <div class="list-title"><h2>KEY MOMENTS</h2><span class="count-badge">${s.moments.length} MOMENTS · ${allCount()} TOÀN SHOW</span></div>
+      <div class="moments">${moments||'<div class="empty-state"><strong>Phần này chưa có moment</strong><p>Thêm ghi chú cho từng tín hiệu: MC nói câu nào, nghệ sĩ đứng đâu, chuyển cảnh lúc nào và gọi Executor/Cue nào.</p></div>'}</div>
+      <button class="btn btn-accent" data-action="add-moment" data-section-id="${s.id}">+ THÊM KEY MOMENT</button>
+      <div class="section-hint">Mẹo: Dùng nút ↑ ↓ để sắp thứ tự moment theo diễn biến thực tế. Tất cả thay đổi được tự lưu.</div>
+    </div>`;
+  }
+  function fieldBox(label,value) {return `<div class="field-box"><div class="field-label">${label}</div><div class="field-value ${!value?'muted':''}">${txt(value)}</div></div>`;}
+  function renderShow() {
+    const arr=flatMoments();
+    if (!arr.length) return `<div class="main-layout"><div class="empty-state"><strong>Chưa có Key Moment</strong><p>Chuyển sang Rehearsal, tạo phần và ghi lại các thao tác trước khi chạy show.</p><button class="btn btn-accent" data-action="switch-mode" data-mode="rehearsal">Chuyển sang Rehearsal</button></div></div>`;
+    let idx=Math.max(0,arr.findIndex(x=>x.id===state.cursorId));
+    const active=arr[idx];
+    const selector=`<div class="live-section-picker"><label for="sectionJump">NHẢY ĐẾN</label><select id="sectionJump" aria-label="Nhảy đến phần trong show">${state.sections.map(s=>`<option value="${esc(s.id)}" ${s.id===active.sectionId?'selected':''}>${esc(s.name)}</option>`).join('')}</select></div>`;
+    if (state.ended) return `<div class="main-layout"><div class="live-topbar"><div class="eyebrow">LIVE SHOW / MANUAL CUE MONITOR</div></div><div class="live-finish"><div style="font-size:43px;color:var(--green)">✓</div><h2>SHOW HOÀN THÀNH</h2><p>${state.doneIds.length} / ${arr.length} moment được đánh dấu hoàn tất.</p><div class="buttons"><button class="btn btn-outline" data-action="previous">← QUAY LẠI MOMENT CUỐI</button><button class="btn btn-accent" data-action="reset">BẮT ĐẦU LẠI</button></div></div></div>`;
+    const upcoming=arr.slice(idx+1,idx+5).map((m,j)=>`<button type="button" class="upcoming-card" data-action="jump-moment" data-id="${m.id}"><small>TIẾP THEO · ${String(idx+j+2).padStart(2,'0')} / ${arr.length} · ${esc(m.sectionName)}</small><strong>${esc(m.title)}</strong><span>${m.executor?'EXEC '+esc(m.executor):''}${m.cue?'  ·  CUE '+esc(m.cue):''}</span></button>`).join('');
+    const prev=idx>0?arr[idx-1]:null;
+    const execTags=(active.executor?`<div class="exec-tag"><label>EXECUTOR</label><strong>${esc(active.executor)}</strong></div>`:'')+(active.cue?`<div class="exec-tag cue"><label>CUE</label><strong>${esc(active.cue)}</strong></div>`:'');
+    return `<div class="main-layout">
+      <div class="live-topbar"><div><div class="eyebrow">LIVE SHOW / MANUAL CUE MONITOR</div><div class="live-counter">Moment <b>${String(idx+1).padStart(2,'0')} / ${arr.length}</b> <span class="live-counts">· Đã xong ${state.doneIds.length}</span></div></div>${selector}</div>
+      <div class="live-hero"><div class="live-label">● MOMENT ĐANG CHỜ · ${esc(active.sectionName)}</div><h2>${esc(active.title)}</h2>
+        <div class="live-subtitle">${active.trigger?'Dấu hiệu: '+esc(active.trigger):'Chờ tín hiệu từ sân khấu / Stage Manager'}</div>
+        ${execTags?`<div class="exec-row">${execTags}</div>`:''}
+        <div class="divider"></div>
+        <div class="field-grid">${fieldBox('01 / CHUẨN BỊ',active.prepare)}${fieldBox('02 / THỰC HIỆN',active.action)}</div>
+        ${active.notes?`<div style="margin-top:14px">${fieldBox('03 / GHI CHÚ THÊM',active.notes)}</div>`:''}
+      </div>
+      <div class="live-actions"><button type="button" class="btn btn-outline" data-action="previous" ${idx===0?'disabled':''}>← LÙI LẠI</button><button type="button" class="btn btn-accent" data-action="next">✓ ${idx===arr.length-1?'HOÀN TẤT SHOW':'ĐÃ XONG · MOMENT TIẾP →'}</button></div>
+      <div class="live-notice">Chỉ nhắc thao tác, KHÔNG gửi GO / OFF / GOTO đến grandMA2. Bấm “Đã xong” sau khi thực hiện trên bàn.</div>
+      <div class="list-title"><h2>${upcoming?'SẮP TỚI':'MOMENT CUỐI CÙNG'}</h2><span class="count-badge">${Math.max(0,arr.length-idx-1)} PHÍA TRƯỚC</span></div>
+      ${upcoming?`<div class="upcoming-grid">${upcoming}</div>`:'<div class="section-hint">Đây là moment cuối. Khi hoàn tất, bấm nút màu đỏ phía trên.</div>'}
+      ${prev?`<div class="upcoming-card last"><small>MOMENT VỪA QUA</small><strong>${esc(prev.title)}</strong><span>${esc(prev.sectionName)}</span></div>`:''}
+      <div class="heading-actions"><button class="btn btn-quiet btn-sm" data-action="edit-moment" data-id="${active.id}">✎ Chỉnh ghi chú moment này</button><button class="btn btn-quiet btn-sm" data-action="reset">↺ Reset trạng thái show</button></div>
+    </div>`;
+  }
+  function render() {
+    ensureCursor();
+    $('#showName').textContent=state.name;
+    $('#modeRehearsal').classList.toggle('active',state.mode==='rehearsal');
+    $('#modeShow').classList.toggle('active',state.mode==='show');
+    $('#workspace').classList.toggle('show-mode',state.mode==='show');
+    renderSidebar();
+    $('#main').innerHTML=state.mode==='show'?renderShow():renderRehearsal();
+  }
+
+  function input(name,label,value='',extra='') {return `<div class="form-field"><label for="f_${name}">${label}</label><input id="f_${name}" name="${name}" value="${esc(value)}" ${extra}></div>`;}
+  function area(name,label,value='',placeholder='') {return `<div class="form-field"><label for="f_${name}">${label}</label><textarea id="f_${name}" name="${name}" rows="2" placeholder="${esc(placeholder)}">${esc(value)}</textarea></div>`;}
+  function foot() {return `<div class="form-actions"><button type="button" class="btn btn-quiet" data-action="close-dialog">Hủy</button><button type="submit" class="btn btn-accent">LƯU THAY ĐỔI</button></div>`;}
+  function openDialog(type,id=null,sectionId=null) {
+    const dlg=$('#editorDialog'),form=$('#editorForm');
+    dlg.dataset.type=type;dlg.dataset.id=id||'';dlg.dataset.sectionId=sectionId||'';
+    if (type==='show') {$('#dialogTitle').textContent='Tên chương trình';form.innerHTML=input('name','TÊN SHOW',state.name,'required maxlength="140" autofocus')+foot();}
+    else if (type==='section') {
+      const s=id?findSection(id):null;
+      $('#dialogTitle').textContent=s?'Chỉnh sửa phần':'Tạo phần mới';
+      form.innerHTML=input('name','TÊN PHẦN / KEY',s?.name||'','required maxlength="140" autofocus placeholder="OPENING / TIẾT MỤC 01 / FINALE"')+area('notes','GHI CHÚ CHUNG CHO PHẦN',s?.notes||'','Ví dụ: Stage Manager gọi standby trước 30s')+foot();
+    } else {
+      const s=findSection(sectionId),m=id?s?.moments.find(x=>x.id===id):null;
+      if (!s) return;
+      $('#dialogTitle').textContent=m?'Chỉnh sửa Key Moment':'Thêm Key Moment';
+      form.innerHTML=`${input('title','TÊN KEY MOMENT *',m?.title||'','required maxlength="180" autofocus placeholder="MC ra sân khấu / Drop / Blackout"')}
+        ${area('trigger','DẤU HIỆU / KHI NÀO THỰC HIỆN?',m?.trigger||'','Ví dụ: MC nói câu cuối; dancer bước ra; nhận lệnh từ SM')}
+        <div class="form-grid">${input('executor','EXECUTOR TRÊN grandMA2',m?.executor||'','maxlength="180" placeholder="1.101 hoặc 1.101 + 1.105"')}${input('cue','CUE',m?.cue||'','maxlength="180" placeholder="5 / 5.1 / 7 Thru 9"')}</div>
+        ${area('prepare','CẦN CHUẨN BỊ',m?.prepare||'','Ví dụ: Standby đèn mặt, bàn nâng, group beam...')}
+        ${area('action','KHI ĐẾN MOMENT CẦN LÀM GÌ?',m?.action||'','Ví dụ: GO Executor 1.101 Cue 5; kéo fader 1.202')}
+        ${area('notes','GHI CHÚ THÊM',m?.notes||'','Thông tin đặc biệt từ rehearsal')}
+        <div class="form-field"><label for="f_color">MÀU NHẬN BIẾT</label><select id="f_color" name="color">${COLORS.map(c=>`<option value="${c}" ${c===(m?.color||'amber')?'selected':''}>${{amber:'Vàng / Standby',red:'Đỏ / Quan trọng',blue:'Xanh dương / MC',green:'Xanh lá / Go',purple:'Tím / Chuyển cảnh'}[c]}</option>`).join('')}</select></div>
+        <div class="dialog-help">Chỉ là ghi chú. Ứng dụng không gửi lệnh đến bàn điều khiển ánh sáng.</div>${foot()}`;
+    }
+    dlg.showModal();
+    setTimeout(()=>form.querySelector('[autofocus]')?.focus(),40);
+  }
+  function editorSubmit(e) {
+    e.preventDefault();
+    const dlg=$('#editorDialog');const f=new FormData(e.currentTarget);
+    const type=dlg.dataset.type,id=dlg.dataset.id,sectionId=dlg.dataset.sectionId;
+    const val=(name,max=2500)=>cap(f.get(name),max).trim();
+    if(type==='show') {if(!val('name',140))return;state.name=val('name',140);}
+    else if(type==='section') {
+      const name=val('name',140);if(!name) return;
+      if(id) {const s=findSection(id);if(!s)return;s.name=name;s.notes=val('notes');}
+      else {const s={id:newId(),name,notes:val('notes'),moments:[]};state.sections.push(s);state.selectedSectionId=s.id;}
+    } else if(type==='moment') {
+      const s=findSection(sectionId);if(!s)return;
+      const title=val('title',180);if(!title)return;
+      const m={title,trigger:val('trigger'),prepare:val('prepare'),action:val('action'),executor:val('executor',180),cue:val('cue',180),notes:val('notes'),color:COLORS.includes(val('color'))?val('color'):'amber'};
+      if(id){const target=s.moments.find(x=>x.id===id);if(!target)return;Object.assign(target,m);}
+      else {m.id=newId();s.moments.push(m); if(!state.cursorId)state.cursorId=m.id;}
+      state.selectedSectionId=s.id;
+    }
+    dlg.close();commit();toast('Đã lưu ghi chú.');
+  }
+  function locateMoment(id){for(const s of state.sections){const index=s.moments.findIndex(m=>m.id===id);if(index!==-1)return {section:s,index,moment:s.moments[index]};}return null;}
+  function moveItem(array,index,direction){const to=index+direction;if(to<0||to>=array.length)return;[array[index],array[to]]=[array[to],array[index]];}
+  function next() {const arr=flatMoments();if(!arr.length)return;const idx=arr.findIndex(m=>m.id===state.cursorId);if(idx<0||state.ended)return;state.doneIds=[...new Set([...state.doneIds,state.cursorId])];if(idx===arr.length-1)state.ended=true;else state.cursorId=arr[idx+1].id;commit({scrollTop:true});}
+  function previous(){const arr=flatMoments();if(state.ended){state.ended=false;state.doneIds=state.doneIds.filter(x=>x!==state.cursorId);commit({scrollTop:true});return;}const idx=arr.findIndex(m=>m.id===state.cursorId);if(idx<=0)return;state.cursorId=arr[idx-1].id;state.doneIds=state.doneIds.filter(x=>x!==state.cursorId);commit({scrollTop:true});}
+  function switchMode(mode){state.mode=mode;commit({scrollTop:true});}
+  function downloadJSON(){
+    const date=new Date().toISOString().slice(0,10);
+    const name=(state.name.normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^\w-]+/g,'_').slice(0,38)||'SHOW');
+    const output={...state,exportedAt:new Date().toISOString(),app:'SOWN Cue Monitor V0.1'};
+    const blob=new Blob([JSON.stringify(output,null,2)],{type:'application/json'});
+    const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`SOWN_${name}_${date}.json`;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),10000);toast('Đã tạo file JSON để lưu/chia sẻ.');
+  }
+  async function importJSON(file){
+    if(!file)return;
+    if(file.size>3*1024*1024) {toast('File quá lớn (tối đa 3 MB).');return;}
+    try {const s=normalize(JSON.parse(await file.text()));if(!confirm(`Nhập show “${s.name}”?\n\nDữ liệu hiện tại trên máy sẽ bị thay thế. Hãy xuất backup trước khi nhập.`))return;state=s;commit({scrollTop:true});toast('Đã nhập show thành công.');}
+    catch(err){alert('Không nhập được file: '+err.message);}
+  }
+  function handleButton(e){
+    const b=e.target.closest('button[data-action]');if(!b||b.disabled)return;
+    const action=b.dataset.action,id=b.dataset.id;
+    switch(action){
+      case 'switch-mode': switchMode(b.dataset.mode);break;
+      case 'rename-show':openDialog('show');break;
+      case 'add-section':openDialog('section');break;
+      case 'edit-section':openDialog('section',id);break;
+      case 'add-moment':openDialog('moment',null,b.dataset.sectionId);break;
+      case 'edit-moment':{const target=locateMoment(id);if(target)openDialog('moment',id,target.section.id);break;}
+      case 'select-section':{
+        const s=findSection(id);if(!s)return;
+        if(state.mode==='show') {if(!s.moments.length){toast('Phần này chưa có Key Moment.');return;}if(!confirm(`Chuyển đến moment đầu tiên của “${s.name}”?`))return;state.cursorId=s.moments[0].id;state.ended=false;}
+        else state.selectedSectionId=id;
+        commit({scrollTop:true});break;
+      }
+      case 'section-up':case 'section-down':{const i=state.sections.findIndex(s=>s.id===state.selectedSectionId);moveItem(state.sections,i,action==='section-up'?-1:1);commit();break;}
+      case 'delete-section':{
+        const s=findSection(id);if(!s||!confirm(`Xóa phần “${s.name}” và toàn bộ ${s.moments.length} moment bên trong?\n\nKhông thể hoàn tác nếu chưa có backup.`))return;
+        state.sections=state.sections.filter(x=>x.id!==id);ensureCursor();commit();toast('Đã xóa phần.');break;
+      }
+      case 'moment-up':case 'moment-down':{const loc=locateMoment(id);if(!loc)return;moveItem(loc.section.moments,loc.index,action==='moment-up'?-1:1);commit();break;}
+      case 'delete-moment':{
+        const loc=locateMoment(id);if(!loc||!confirm(`Xóa Key Moment “${loc.moment.title}”?`))return;
+        loc.section.moments.splice(loc.index,1);ensureCursor();commit();toast('Đã xóa moment.');break;
+      }
+      case 'clone-moment':{
+        const loc=locateMoment(id);if(!loc)return;
+        loc.section.moments.splice(loc.index+1,0,{...loc.moment,id:newId(),title:loc.moment.title+' (bản sao)'});commit();toast('Đã nhân bản moment.');break;
+      }
+      case 'next':next();break;
+      case 'previous':previous();break;
+      case 'jump-moment':{
+        const arr=flatMoments(),i=arr.findIndex(m=>m.id===id);if(i<0)return;
+        if(!confirm(`Nhảy đến “${arr[i].title}”?\n\nCác moment bị bỏ qua sẽ KHÔNG được đánh dấu hoàn tất.`))return;
+        state.cursorId=id;state.ended=false;commit({scrollTop:true});break;
+      }
+      case 'reset':if(confirm('Đưa show về moment đầu tiên và xóa trạng thái đã hoàn tất?\n\nNội dung ghi chú sẽ được giữ nguyên.')){state.cursorId=flatMoments()[0]?.id||null;state.ended=false;state.doneIds=[];commit({scrollTop:true});toast('Đã reset trạng thái show.');}break;
+      case 'new-show':if(confirm('Tạo show mới?\n\nToàn bộ rundown hiện tại sẽ bị thay thế. Hãy xuất backup trước nếu cần.')){
+        const sid=newId();state={schema:1,name:'SHOW MỚI',mode:'rehearsal',selectedSectionId:sid,cursorId:null,ended:false,doneIds:[],sections:[{id:sid,name:'OPENING',notes:'',moments:[]}]};commit({scrollTop:true});toast('Đã tạo show mới.');}break;
+      case 'export':downloadJSON();break;
+      case 'import':$('#importFile').click();break;
+      case 'close-dialog':$('#editorDialog').close();break;
+    }
+  }
+  document.addEventListener('click',handleButton);
+  $('#editorForm').addEventListener('submit',editorSubmit);
+  $('#importFile').addEventListener('change',e=>{importJSON(e.target.files?.[0]);e.target.value='';});
+  document.addEventListener('change',e=>{
+    if(e.target.id==='sectionJump'){
+      const s=findSection(e.target.value);if(!s?.moments.length){toast('Phần này chưa có Key Moment.');render();return;}
+      if(!confirm(`Nhảy đến moment đầu tiên của “${s.name}”?`)){render();return;}
+      state.cursorId=s.moments[0].id;state.ended=false;commit({scrollTop:true});
+    }
+  });
+  document.addEventListener('keydown',e=>{
+    if(state.mode!=='show'||$('#editorDialog').open||e.altKey||e.ctrlKey||e.metaKey||['INPUT','TEXTAREA','SELECT'].includes(document.activeElement?.tagName))return;
+    if(e.key==='ArrowRight'){e.preventDefault();next();}
+    if(e.key==='ArrowLeft'){e.preventDefault();previous();}
+  });
+  $('#editorDialog').addEventListener('click',e=>{if(e.target===$('#editorDialog'))$('#editorDialog').close();});
+  ensureCursor();save();render();
+  if('serviceWorker' in navigator && location.protocol==='https:')navigator.serviceWorker.register('./sw.js').catch(console.warn);
+})();
+
+</script>
+</body>
+</html>
